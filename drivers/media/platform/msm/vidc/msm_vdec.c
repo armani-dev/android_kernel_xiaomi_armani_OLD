@@ -23,6 +23,7 @@
 #define MIN_NUM_OUTPUT_BUFFERS 4
 #define MAX_NUM_OUTPUT_BUFFERS VIDEO_MAX_FRAME
 #define DEFAULT_VIDEO_CONCEAL_COLOR_BLACK 0x8080
+#define MB_SIZE_IN_PIXEL (16 * 16)
 
 #define TZ_DYNAMIC_BUFFER_FEATURE_ID 12
 #define TZ_FEATURE_VERSION(major, minor, patch) \
@@ -338,9 +339,9 @@ static u32 get_frame_size_nv12(int plane,
 }
 
 static u32 get_frame_size_compressed(int plane,
-					u32 height, u32 width)
+					u32 max_mbs_per_frame, u32 size_per_mb)
 {
-	return (width * height * 3/2)/4;
+	return (max_mbs_per_frame * size_per_mb * 3/2)/2;
 }
 
 static u32 get_frame_size(struct msm_vidc_inst *inst,
@@ -785,7 +786,8 @@ int msm_vdec_g_fmt(struct msm_vidc_inst *inst, struct v4l2_format *f)
 						get_frame_size(inst, fmt,
 								f->type, i);
 					plane_sizes[i] =
-					f->fmt.pix_mp.plane_fmt[i].sizeimage;
+						f->fmt.pix_mp.plane_fmt[i].
+							sizeimage;
 				} else
 					f->fmt.pix_mp.plane_fmt[i].sizeimage =
 						plane_sizes[i];
