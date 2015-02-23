@@ -209,6 +209,7 @@ int mdss_mdp_smp_reserve(struct mdss_mdp_pipe *pipe)
 	u32 num_blks = 0, reserved = 0;
 	struct mdss_mdp_plane_sizes ps;
 	int i;
+	bool force_alloc = 0;
 	int rc = 0, rot_mode = 0, wb_mixer = 0;
 	u32 nlines, format, seg_w;
 	u16 width;
